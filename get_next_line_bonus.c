@@ -6,7 +6,7 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 03:14:10 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/01/02 22:11:03 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/06/01 21:18:19 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,25 @@
 
 #include "get_next_line_bonus.h"
 
-char	*fn_free(char *variable)
+/**
+ * Frees a pointer and prevent double-freeing.
+ * @param	char	*variable: a pointer to heap memory address.
+ * @return	NULL.
+ */
+char	*fn_free(char **variable)
 {
-	free(variable);
-	variable = NULL;
-	return (variable);
+	if (*variable)
+	{
+		free(*variable);
+		*variable = NULL;
+	}
+	return (*variable);
 }
 
 char	*process_carry_over(char *carry_over)
 {
-	size_t		i;
-	char		*line;
+	int		i;
+	char	*line;
 
 	if (carry_over == NULL || carry_over[0] == '\0')
 		return (NULL);
@@ -77,7 +85,7 @@ char	*process_carry_over(char *carry_over)
 	{
 		line = ft_calloc(i + 1, sizeof(char));
 		if (!line)
-			return (carry_over = fn_free(carry_over), NULL);
+			return (carry_over = fn_free(&carry_over), NULL);
 		ft_strlcpy(line, carry_over, i + 1);
 		carry_over[0] = '\0';
 	}
@@ -85,7 +93,7 @@ char	*process_carry_over(char *carry_over)
 	{
 		line = ft_calloc(i + 2, sizeof(char));
 		if (!line)
-			return (carry_over = fn_free(carry_over), NULL);
+			return (carry_over = fn_free(&carry_over), NULL);
 		ft_strlcpy(line, carry_over, i + 2);
 		ft_strlcpy(carry_over, &carry_over[i + 1], ft_strlen(carry_over) - i);
 	}
@@ -95,28 +103,28 @@ char	*process_carry_over(char *carry_over)
 char	*read_buffer(int fd, char *carry_over)
 {
 	char	*buffer;
-	ssize_t	buffer_counter;
+	int		buffer_counter;
 	char	*temp;
 
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
-		return (carry_over = fn_free(carry_over), NULL);
+		return (carry_over = fn_free(&carry_over), NULL);
 	buffer_counter = 1;
 	while (buffer_counter > 0)
 	{
 		buffer_counter = read(fd, buffer, BUFFER_SIZE);
 		if (buffer_counter == -1)
-			return (carry_over = fn_free(carry_over), free(buffer), NULL);
+			return (carry_over = fn_free(&carry_over), free(buffer), NULL);
 		buffer[buffer_counter] = '\0';
 		temp = ft_strjoin(carry_over, buffer);
 		if (temp == NULL)
-			return (carry_over = fn_free(carry_over), free(buffer), NULL);
-		carry_over = fn_free(carry_over);
+			return (carry_over = fn_free(&carry_over), free(buffer), NULL);
+		carry_over = fn_free(&carry_over);
 		carry_over = temp;
 		if (ft_strchr(carry_over, '\n'))
 			buffer_counter = 0;
 	}
-	buffer = fn_free(buffer);
+	buffer = fn_free(&buffer);
 	return (carry_over);
 }
 
@@ -129,7 +137,7 @@ char	*get_next_line(int fd)
 		|| BUFFER_SIZE <= 0 || BUFFER_SIZE > UINT_MAX)
 	{
 		if (carry_over[fd])
-			carry_over[fd] = fn_free(carry_over[fd]);
+			carry_over[fd] = fn_free(&carry_over[fd]);
 		return (NULL);
 	}
 	if (!carry_over[fd])
@@ -143,6 +151,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = process_carry_over(carry_over[fd]);
 	if (carry_over[fd] && carry_over[fd][0] == '\0')
-		carry_over[fd] = fn_free(carry_over[fd]);
+	{
+		carry_over[fd] = fn_free(&carry_over[fd]);
+	}
 	return (line);
 }

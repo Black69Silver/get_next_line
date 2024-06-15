@@ -6,15 +6,16 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:19 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/05/16 01:03:06 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/06/02 02:36:33 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char *str)
+/* Count and return the number of characters in a string preceding the '\0'. */
+int	ft_strlen(const char *str)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	if (!str)
@@ -24,11 +25,15 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+/* Allocate contiguous memory with size 'count' * 'size' bytes.
+ * (Which is to be used by 'count' (number of) objects of 'size' bytes each.)
+ * Fill the allocated memory with '0's.
+ * Return a pointer to the allocated memory. */
+void	*ft_calloc(int count, int size)
 {
-	size_t	total_size;
+	int		total_size;
 	char	*string;
-	size_t	i;
+	int		i;
 
 	i = 0;
 	total_size = count * size;
@@ -44,10 +49,13 @@ void	*ft_calloc(size_t count, size_t size)
 	return (string);
 }
 
+/* Allocate in heap memory a slot sufficient to fit the concatenation of
+ * ’s1’ and ’s2’. Fill it up.
+ * Return the new string or NULL if the allocation fails. */
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
-	size_t	i;
+	int		i;
 
 	if (!s1 || !s2)
 		return (NULL);
@@ -71,10 +79,14 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (str);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+/* Copy up to 'dstsize'-1 characters from 'src' string to 'dst' string,
+ * add '\0' to the end if 'dstsize' is not 0.
+ * Calculate and return the total length of 'src' string.
+ */
+int	ft_strlcpy(char *dst, const char *src, int dstsize)
 {
-	size_t	len_src;
-	size_t	i;
+	int	len_src;
+	int	i;
 
 	len_src = ft_strlen(src);
 	if (dstsize < 1)
@@ -89,10 +101,12 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (len_src);
 }
 
+/* Return a pointer of the first occurrence of 'c'
+ * in the string pointed to by 's', or, if not found, NULL. */
 char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
-	size_t	len_str;
+	int		i;
+	int		len_str;
 	char	*output;
 
 	i = 0;
