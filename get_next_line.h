@@ -6,7 +6,7 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:45:24 by ggeorgie          #+#    #+#             */
-/*   Updated: 2023/12/23 21:38:33 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2023/12/23 03:11:15 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include <stdlib.h>	/* to use 'malloc', 'free' */
 # include <sys/types.h> /* to use 'ssize_t' */
 # include <unistd.h>	/* to use 'read' */
+# include <stddef.h>	/* to please chatgpt-	remove before submission!!! */ 
+# include <stdio.h>		/* to use 'printf'	-	remove before submission!!! */
+# include <fcntl.h>		/* to use 'open'	-	remove before submission!!! */
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 8
